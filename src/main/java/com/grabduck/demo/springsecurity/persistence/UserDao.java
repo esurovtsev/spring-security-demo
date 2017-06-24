@@ -3,6 +3,7 @@ package com.grabduck.demo.springsecurity.persistence;
 import com.grabduck.demo.springsecurity.domain.User;
 import com.grabduck.demo.springsecurity.domain.UserField;
 import lombok.NonNull;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Component;
@@ -28,5 +29,9 @@ public class UserDao {
 
     public void save(@NonNull User user) {
         mongoTemplate.save(user);
+    }
+
+    public Optional<User> findById(@NonNull ObjectId id) {
+        return Optional.ofNullable(mongoTemplate.findById(id, User.class));
     }
 }

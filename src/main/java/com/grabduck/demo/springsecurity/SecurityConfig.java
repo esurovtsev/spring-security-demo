@@ -1,7 +1,8 @@
 package com.grabduck.demo.springsecurity;
 
+import com.grabduck.demo.springsecurity.services.TokenAuthService;
 import com.grabduck.demo.springsecurity.services.UserService;
-import com.grabduck.demo.springsecurity.web.AdminAuthFilter;
+import com.grabduck.demo.springsecurity.web.StatelessAuthFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,12 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
     @Autowired
-    private AdminAuthFilter adminAuthFilter;
+    private TokenAuthService tokenAuthService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilterBefore(adminAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new StatelessAuthFilter(tokenAuthService), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/readme.txt", "/css/*").permitAll()
                 .anyRequest().authenticated()
